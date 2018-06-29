@@ -4,11 +4,14 @@
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
     "lodash": "^4.17.10"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
