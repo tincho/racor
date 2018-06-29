@@ -19,12 +19,13 @@ const flow = require('lodash/fp/flow');
         getPath: 'proveedores',
         // mappers (defaults to "identity", i.e. function(a) {return a })
         // FIXED ARITY OF 1
-        apply: [
-            // args
-            'proveedores',
-            // body
-            'return proveedores.map(p => p.id)'
-        ],
+        // options:
+        // apply: ['proveedores', 'return proveedores.map(p => p.id)'],
+        apply: proveedores => proveedores.map(p => p.id),
+        // apply: {
+        //     args: 'proveedores',
+        //     body: 'return proveedores.map(p => p.id)'
+        // },
         // path to set in the output object (using lodash/set supported format)
         setPath: 'schema.properties.proveedores.items.enum'
     }];
@@ -39,9 +40,25 @@ const flow = require('lodash/fp/flow');
         }]
     };
 
-    var obj = hoseFit(spec[0], input);
+    let toHydrate = {};
+    toHydrate = {
+        schema: {
+            properties: {
+                proveedores: {
+                    type: 'string',
+                    title: 'Sarasa',
+                    default: "1"
+                }
+            }
+        }
+    };
+
+    var obj = hoseFit(spec[0], input, toHydrate);
 
     console.log(JSON.stringify(obj, null, 2));
+
+    console.log('original:');
+    console.log(JSON.stringify(toHydrate, null, 2));
 
     // inputValue = get('input, getPath)
     // value = new Function(apply.args, apply.body)()
@@ -54,6 +71,9 @@ function hoseFit(spec, input, output = {}) {
         if (typeof fn === 'function') {
             return fn;
         }
+        if (fn.args && fn.body) {
+            fn = [fn.args, fn.body];
+        }
         try {
             return new Function(...fn);
         } catch(e) {
@@ -62,15 +82,15 @@ function hoseFit(spec, input, output = {}) {
         }
     }
 
-    let {
+    let { 
         getPath,
         apply,
         setPath 
     } = spec;
     let getR   = get(getPath);
     let applyR = ensureFn(apply);
-    //let setR   = set(setPath, {});
     let flowR  = flow(getR, applyR);
     let value  = flowR(input);
-    return set(setPath, value)(output);
+    let setR   = set(setPath, value);
+    return setR(output);
 }
