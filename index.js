@@ -27,10 +27,10 @@ function hoseFit(spec, input, output = {}) {
         if (typeof fn === 'function') {
             return fn;
         }
-        if (fn.args && fn.body) {
-            fn = [ fn.args, fn.body ];
-        }
         try {
+            if (fn.args && fn.body) {
+                fn = [ fn.args, fn.body ];
+            }
             return new Function(...fn);
         } catch(e) {
             return identity;

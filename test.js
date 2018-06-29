@@ -71,6 +71,16 @@ describe('HoseFit', () => {
             var obj = hoseFit(spec, input, toHydrate);
             assert.deepEqual(Object.keys(toHydrate.schema.properties.proveedores), ['type', 'title', 'default']);
         });
+
+        it('should fallback apply to identity/mirror', () => {
+            var spec = {
+                getPath: 'proveedores',
+                setPath: 'schema.properties.proveedores.items.enum'
+            };
+            var obj = hoseFit(spec, input);
+            assert.equal(obj.schema.properties.proveedores.items.enum[0].id, 1414);
+            assert.equal(obj.schema.properties.proveedores.items.enum[1].id, 11);
+        });
     });
 
     describe('apply types', () => {
