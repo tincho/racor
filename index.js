@@ -1,14 +1,8 @@
 'use strict';
 
-const get = require('lodash/fp/get');
-const set = require('lodash/fp/set');
-const flow = require('lodash/fp/flow');
-
-// "HYDRANT"
-// HOSE-FITTING
-// GET-MAP-SET
-// gets data
-// maps paths to values
+const get = require('lodash/get');
+const set = require('lodash/set');
+const flow = require('lodash/flow');
 
 /**
  * "Hose Fit", in spanish "Acople de mangueras"
@@ -27,10 +21,15 @@ function hoseFit(spec, input, output = {}) {
         if (typeof fn === 'function') {
             return fn;
         }
+        if (!fn) {
+            fn = identity;
+        } else if (fn.args && fn.body) {
+            fn = [ fn.args, fn.body ];
+        } else if (typeof fn === 'string') {
+            // assume we get just the body
+            fn = [ fn ];
+        }
         try {
-            if (fn.args && fn.body) {
-                fn = [ fn.args, fn.body ];
-            }
             return new Function(...fn);
         } catch(e) {
             return identity;
@@ -42,12 +41,10 @@ function hoseFit(spec, input, output = {}) {
         apply,
         setPath
     } = spec;
-    let getR   = get(getPath);
     let applyR = ensureFn(apply);
-    let flowR  = flow(getR, applyR);
-    let value  = flowR(input);
-    let setR   = set(setPath, value);
-    return setR(output);
+    let origin = get(input, getPath);
+    let value  = applyR(origin);
+    return set(output, setPath, value);
 }
 
 module.exports = hoseFit;
