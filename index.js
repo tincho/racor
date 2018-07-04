@@ -2,7 +2,6 @@
 
 const get = require('lodash/get');
 const set = require('lodash/set');
-const flow = require('lodash/flow');
 
 /**
  * "Hose Fit", in spanish "Acople de mangueras"
