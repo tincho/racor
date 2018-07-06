@@ -2,6 +2,7 @@
 
 const get = require('lodash/get');
 const set = require('lodash/set');
+const isArray = a => Array.prototype.isPrototypeOf(a);
 
 /**
  * "Hose Fit", in spanish "Acople de mangueras"
@@ -15,6 +16,10 @@ const set = require('lodash/set');
  * @param {*} output 
  */
 function hoseFit(spec, input, output = {}) {
+    if (isArray(spec)) {
+        return spec.reduce((out, sp) => hoseFit(sp, input, out), output);
+    }
+
     const identity = i => i;
     const ensureFn = fn => {
         if (typeof fn === 'function') {

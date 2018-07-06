@@ -10,6 +10,13 @@ describe('HoseFit', () => {
         }, {
             id: 11,
             title: "pipi 2"
+        }],
+        comments: [{
+            id: 16,
+            title: 'piriri'
+        }, {
+            id: 17,
+            title: 'piriri 2'
         }]
     };
 
@@ -130,6 +137,47 @@ describe('HoseFit', () => {
             };
             var obj = hoseFit(spec, input);
             assert.equal(obj.schema.properties.post.enum[0], 1414);
+        });
+    });
+
+    describe('multiple specs', () => {
+        it('should take multiple specs to same input', () => {
+            var specs = [{
+                getPath: 'posts',
+                apply: { args: 'posts', body: 'return posts.map(p => p.id)' },
+                setPath: 'schema.properties.post.enum'
+            }, {
+                getPath: 'comments',
+                apply: { args: 'comments', body: 'return comments.map(c => c.id)' },
+                setPath: 'schema.properties.comment.enum'
+            }];
+            var obj = hoseFit(specs, input);
+            assert.equal(obj.schema.properties.post.enum[0], 1414);
+            assert.equal(obj.schema.properties.comment.enum[0], 16);
+        });
+        it('should take multiple specs to same input and output', () => {
+            var specs = [{
+                getPath: 'posts',
+                apply: { args: 'posts', body: 'return posts.map(p => p.id)' },
+                setPath: 'schema.properties.post.enum'
+            }, {
+                getPath: 'comments',
+                apply: { args: 'comments', body: 'return comments.map(c => c.id)' },
+                setPath: 'schema.properties.comment.enum'
+            }];
+
+            var out = {
+                schema: {
+                    properties: {
+                        post: {
+                            title: "Post"
+                        }
+                    }
+                }
+            };
+            var obj = hoseFit(specs, input, out);
+            assert.equal(obj.schema.properties.post.enum[0], 1414);
+            assert.equal(obj.schema.properties.comment.enum[0], 16);
         });
     });
 });
