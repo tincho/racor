@@ -9,17 +9,19 @@ const ensureFn = fn => {
         return fn;
     }
     if (!fn) {
-        fn = identity;
+        return identity;
     } else if (fn.args && fn.body) {
         fn = [ fn.args, fn.body ];
     } else if (typeof fn === 'string') {
         // assume we get just the body
         fn = [ fn ];
     }
+    let outFn = identity;
     try {
-        return new Function(...fn);
+        outFn = new Function(...fn);
     } catch(e) {
-        return identity;
+    } finally {
+        return outFn;
     }
 }
 /**
@@ -55,8 +57,8 @@ function hoseFit(spec, input, output = {}) {
  * @param {*} input 
  * @param {*} output 
  */
-hoseFit.min = function hoseFitMin(specs, input, output) {
-    var specs = Object.entries(specs).map(([getPath, setPath]) => ({ getPath, setPath }));
+hoseFit.min = function hoseFitMin(spec, input, output) {
+    var specs = Object.entries(spec).map(([getPath, setPath]) => ({ getPath, setPath }));
     return hoseFit(specs, input, output);
 };
 /**
@@ -66,8 +68,8 @@ hoseFit.min = function hoseFitMin(specs, input, output) {
  * @param {*} input 
  * @param {*} output 
  */
-hoseFit.fn = function hoseFitFn(apply, specs, input, output) {
-    var specs = Object.entries(specs).map(([getPath, setPath]) => ({ getPath, setPath, apply }));
+hoseFit.fn = function hoseFitFn(apply, spec, input, output) {
+    var specs = Object.entries(spec).map(([getPath, setPath]) => ({ getPath, setPath, apply }));
     return hoseFit(specs, input, output);
 };
 /**
