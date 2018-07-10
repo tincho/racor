@@ -3,7 +3,25 @@
 const get = require('lodash/get');
 const set = require('lodash/set');
 const isArray = a => Array.prototype.isPrototypeOf(a);
-
+const identity = i => i;
+const ensureFn = fn => {
+    if (typeof fn === 'function') {
+        return fn;
+    }
+    if (!fn) {
+        fn = identity;
+    } else if (fn.args && fn.body) {
+        fn = [ fn.args, fn.body ];
+    } else if (typeof fn === 'string') {
+        // assume we get just the body
+        fn = [ fn ];
+    }
+    try {
+        return new Function(...fn);
+    } catch(e) {
+        return identity;
+    }
+}
 /**
  * "Hose Fit", in spanish "Acople de mangueras"
  * Given a "spec": 
@@ -18,26 +36,6 @@ const isArray = a => Array.prototype.isPrototypeOf(a);
 function hoseFit(spec, input, output = {}) {
     if (isArray(spec)) {
         return spec.reduce((out, sp) => hoseFit(sp, input, out), output);
-    }
-
-    const identity = i => i;
-    const ensureFn = fn => {
-        if (typeof fn === 'function') {
-            return fn;
-        }
-        if (!fn) {
-            fn = identity;
-        } else if (fn.args && fn.body) {
-            fn = [ fn.args, fn.body ];
-        } else if (typeof fn === 'string') {
-            // assume we get just the body
-            fn = [ fn ];
-        }
-        try {
-            return new Function(...fn);
-        } catch(e) {
-            return identity;
-        }
     }
 
     let {
