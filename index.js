@@ -43,10 +43,41 @@ function hoseFit(spec, input, output = {}) {
         apply,
         setPath
     } = spec;
-    let applyR = ensureFn(apply);
     let origin = get(input, getPath);
+    let applyR = ensureFn(apply);
     let value  = applyR(origin);
     return set(output, setPath, value);
-}
+};
+
+/**
+ * minimal/abbreviated way of using
+ * @param {Object} specs : { getPath: setPath }
+ * @param {*} input 
+ * @param {*} output 
+ */
+hoseFit.min = function hoseFitMin(specs, input, output) {
+    var specs = Object.entries(specs).map(([getPath, setPath]) => ({ getPath, setPath }));
+    return hoseFit(specs, input, output);
+};
+/**
+ * minimal/abbreviated way of using
+ * @param {Function} apply
+ * @param {Object} specs : { getPath: setPath }
+ * @param {*} input 
+ * @param {*} output 
+ */
+hoseFit.fn = function hoseFitFn(apply, specs, input, output) {
+    var specs = Object.entries(specs).map(([getPath, setPath]) => ({ getPath, setPath, apply }));
+    return hoseFit(specs, input, output);
+};
+/**
+ * minimal/abbreviated way of using
+ * @param {String} prop
+ * @param {*} ...args
+ */
+hoseFit.pluck = function hoseFitPluck(prop, ...args) {
+    var pluck = list => list.map(item => item[prop])
+    return hoseFit.fn(pluck, ...args);
+};
 
 module.exports = hoseFit;

@@ -179,5 +179,37 @@ describe('HoseFit', () => {
             assert.equal(obj.schema.properties.post.enum[0], 1414);
             assert.equal(obj.schema.properties.comment.enum[0], 16);
         });
+
+        it('abbreviated/minimal mode (no apply, default identity)', () => {
+            var specs = {
+                'data.posts': 'schema.properties.post.enum',
+                'data.comments':  'schema.properties.comment.enum'
+            };
+            var obj = hoseFit.min(specs, { data: input });
+            assert.equal(obj.schema.properties.post.enum[0].id, 1414);
+            assert.equal(obj.schema.properties.comment.enum[0].id, 16);
+        });
+
+        it('abbreviated/minimal mode (apply one given fn for all paths)', () => {
+            var specs = {
+                'data.posts': 'schema.properties.post.enum',
+                'data.comments':  'schema.properties.comment.enum',
+            };
+            var fn = data => data.map(item => item.id + 'test');
+            var obj = hoseFit.fn(fn, specs, { data: input });
+            assert.equal(obj.schema.properties.post.enum[0], '1414test');
+            assert.equal(obj.schema.properties.comment.enum[0], '16test');
+        });
+
+        it('abbreviated/minimal mode autopluck', () => {
+            var paths = {
+                'data.posts': 'schema.properties.post.enum',
+                'data.comments':  'schema.properties.comment.enum',
+            };
+            var obj = hoseFit.pluck('id', paths, { data: input });
+            assert.equal(obj.schema.properties.post.enum[0], 1414);
+            assert.equal(obj.schema.properties.comment.enum[0], 16);
+        });
+
     });
 });
