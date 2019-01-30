@@ -1,5 +1,4 @@
-bundle.js
-dist/*
+lib/*
 .cache
 *~
 node_modules

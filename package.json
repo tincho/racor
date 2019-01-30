@@ -2,9 +2,11 @@
   "name": "racor",
   "version": "1.0.0",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
-  "main": "src/racor.js",
+  "main": "lib/racor.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "compile": "babel -d lib src",
+    "prepublish": "npm run compile"
   },
   "author": "tin <tin@nuku.com.ar>",
   "license": "MIT",
@@ -12,6 +14,11 @@
     "lodash.set": "^4.3.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-minify": "^0.5.0",
     "mocha": "^5.2.0"
   }
 }

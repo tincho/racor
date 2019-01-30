@@ -1,5 +1,8 @@
 const assert = require('assert');
 const racor = require('../src/racor');
+// to test after build
+//const racor = require('../lib/racor');
+
 
 describe('racor', () => {
 
