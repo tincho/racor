@@ -1,85 +1,95 @@
 'use strict';
 
-const get = require('lodash/get');
-const set = require('lodash/set');
+const set = require('lodash.set');
+// this is my own whimsical implementation of lodash.get
+const get = (
+    haystack, // object to lookup inside
+    needle, // path to desired key
+    spoon // fallback value if not found
+) => needle
+        .split(/[\.\[\]]/g).filter(q => q && q !== '')
+        .reduce(
+            (obj, key) => obj && obj[key] || false, 
+            haystack
+        ) || spoon;
+
 const isArray = a => Array.prototype.isPrototypeOf(a);
 const identity = i => i;
+const plucker = prop => list => list.map(item => item[prop]);
+/**
+ * if its a function just return it, else try to create one with several methods, fallback to "identity"
+ * @param {*} fn 
+ */
 const ensureFn = fn => {
     if (typeof fn === 'function') {
         return fn;
     }
-    if (!fn) {
-        return identity;
-    } else if (fn.args && fn.body) {
+    if (!fn) return identity;
+    if (fn.args && fn.body) {
         fn = [ fn.args, fn.body ];
     } else if (typeof fn === 'string') {
         // assume we get just the body
         fn = [ fn ];
     }
-    let outFn = identity;
+    let result = identity;
     try {
-        outFn = new Function(...fn);
+        result = new Function(...fn);
     } catch(e) {
     } finally {
-        return outFn;
+        return result;
     }
 }
 /**
- * "Hose Fit", in spanish "Acople de mangueras"
+ * "Racor", spanish for raccord, piping and plumbing fittings
  * Given a "spec": 
- *  search in "input" a value indexed by "spec.getPath",
- *  make it go through "apply"
- *  and set the output to "spec.setPath"
- * @returns it merged with "output", set
- * @param {Object} spec 
- * @param {*} input 
- * @param {*} output 
+ *  1) search in "input" object a value indexed by "spec.src" path,
+ *  2) make it go through "pipe"
+ *  3) set the result at "spec.dst" path in a new object
+ * @returns it merged with "base", if given
+ * @param {Object|Array} spec :
+ *   {String} src source path to read from input
+ *   {String} dst destination path to write in base
+ *   {Function|Array|String} pipe: fn to pass each value after getting it, supports several ways of providing
+ *   {Any} fallback default value if src not found or undefined - will pass thru pipe anyway
+ * @param {*} input object to read src(s) from
+ * @param {*} base object to merge result into, if provided
  */
-function hoseFit(spec, input, output = {}) {
+function racor(spec, input, base = {}) {
     if (isArray(spec)) {
-        return spec.reduce((out, sp) => hoseFit(sp, input, out), output);
+        return spec.reduce((_base, sp) => racor(sp, input, _base), base);
     }
-
     let {
-        getPath,
-        apply,
-        setPath
-    } = spec;
-    let origin = get(input, getPath);
-    let applyR = ensureFn(apply);
-    let value  = applyR(origin);
-    return set(output, setPath, value);
+            src, // key path from origin object
+            dst, // key path in the result object
+            pipe = identity, // fn to apply in the middle
+            fallback // if no value found a default may be provided (will pass thru pipe anyway)
+        } = spec,
+        original = get(input, src, fallback),
+        value  = ensureFn(pipe)(original);
+    return set({...base}, dst, value);
 };
+
+//// abbreviated shortcuts
+const expandSpecs = (pipe = identity, spec) => Object.entries(spec).map(([src, dst]) => ({ src, dst, pipe }));
+/**
+ * minimal/abbreviated way of using
+ * @param {Function} fn
+ * @param {Object} specs : { src (key): dst (value) }
+ */
+racor.fn = (pipe, spec, ...args) => racor(expandSpecs(pipe, spec), ...args);
 
 /**
  * minimal/abbreviated way of using
- * @param {Object} specs : { getPath: setPath }
- * @param {*} input 
- * @param {*} output 
+ * @param {Object} specs : { src (key): dst (value) }
  */
-hoseFit.min = function hoseFitMin(spec, input, output) {
-    var specs = Object.entries(spec).map(([getPath, setPath]) => ({ getPath, setPath }));
-    return hoseFit(specs, input, output);
-};
-/**
- * minimal/abbreviated way of using
- * @param {Function} apply
- * @param {Object} specs : { getPath: setPath }
- * @param {*} input 
- * @param {*} output 
- */
-hoseFit.fn = function hoseFitFn(apply, spec, input, output) {
-    var specs = Object.entries(spec).map(([getPath, setPath]) => ({ getPath, setPath, apply }));
-    return hoseFit(specs, input, output);
-};
-/**
- * minimal/abbreviated way of using
- * @param {String} prop
- * @param {*} ...args
- */
-hoseFit.pluck = function hoseFitPluck(prop, ...args) {
-    var pluck = list => list.map(item => item[prop])
-    return hoseFit.fn(pluck, ...args);
-};
+racor.min = (spec, ...args) => racor(expandSpecs(null, spec), ...args);
 
-module.exports = hoseFit;
+/**
+ * minimal/abbreviated way of using - autopluck prop
+ * @param {String} prop make a plucker of that prop
+ * @see racor.fn
+ */
+racor.pluck = (prop, ...args) => racor.fn(plucker(prop), ...args);
+
+module.exports = racor;
+// export default racor;

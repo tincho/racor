@@ -1,15 +1,15 @@
 {
-  "name": "hydrant",
-  "version": "0.0.1",
+  "name": "racor",
+  "version": "1.0.0",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
+  "author": "tin <tin@nuku.com.ar>",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.10"
+    "lodash.set": "^4.3.2"
   },
   "devDependencies": {
     "mocha": "^5.2.0"

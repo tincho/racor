@@ -117,4 +117,5 @@ This is achieved thanks to the JS functionality where you define a function usin
 
 ## Related
 
-[0] I mean React-JSONSchema-Form, JSONSchema-Form (for Angular) or any other 
+[0] I mean React-JSONSchema-Form, JSONSchema-Form (for Angular) or any other, see:  
+https://json-schema.org/implementations.html#web-ui-generation
