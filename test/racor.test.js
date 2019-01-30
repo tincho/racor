@@ -1,5 +1,5 @@
 const assert = require('assert');
-const racor = require('./index');
+const racor = require('../src/racor');
 
 describe('racor', () => {
 

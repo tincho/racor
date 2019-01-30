@@ -2,7 +2,7 @@
   "name": "racor",
   "version": "1.0.0",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
-  "main": "index.js",
+  "main": "src/racor.js",
   "scripts": {
     "test": "mocha"
   },
