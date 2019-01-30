@@ -1,8 +1,12 @@
 {
   "name": "racor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "lib/racor.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/tincho/racor.git"
+  },
   "scripts": {
     "test": "mocha",
     "compile": "babel -d lib src",
