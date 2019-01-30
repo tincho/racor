@@ -1,17 +1,12 @@
-# I still don't have a name!
+# Racor
 
-The codename so far is HoseFit.
-
-I think it could be more descriptive... like...
-
-* "Get, Apply, Set"
-* "Path to Path"
+Tool to copy values from given key/path of an object, into another.
 
 ## This basically....
 
 * Gets a value from given object, at given path
-* Applies "transformer/mapper/reducer/picker/plucker/whatev-er" (optionally)
-* Sets that value to a different object, at a given path
+* Applies a pipe function in between (optionally)
+* Sets that value to a different object, at a given path (relying on lodash.set)
 
 ## Try it out
 
@@ -21,7 +16,7 @@ I think it could be more descriptive... like...
 
 ## Usage
 
-**Built upon Lodash's `get` and `set` so the path syntax is exactly the same**
+**Built upon Lodash's `set` so the path syntax is exactly the same**
 
 ## What's this
 
@@ -29,7 +24,7 @@ This is a dead-simple JavaScript hand-changing utility for data, mostly JSON.
 
 It passes data from a given path inside the source object *[, applies an optional function to it]*, and set it to a given path inside the destination object.
 
-I'd like to think about it as [hose-fitting](http://www.fredshed.co.uk/photosgardtools/hozelock4waymanifold.jpg), because I developed this with an objective in mind: hydrating my schemas with data, *in a stylish declarative way*.
+I'd like to think about it as [hose-fitting](http://www.fredshed.co.uk/photosgardtools/hozelock4waymanifold.jpg), because I developed this with an objective in mind: hydrating my schemas with data, *in a stylish declarative way*. 
 
 ## Example
 
@@ -62,48 +57,48 @@ fetch('/api/posts')
 .then(res => res.json())
 .then(data => {
     let out = hoseFit({
-        getPath: 'posts',
-        apply: ps => ps.map(p => p.id),
-        setPath: 'schema.properties.posts.enum'
+        src: 'posts',
+        pipe: ps => ps.map(p => p.id),
+        dst: 'schema.properties.posts.enum'
     }, data);
     Object.assign(schemas, out);
 
     // also we can get it assigned passing the schemas as "output" argument
     let newSchemas = hoseFit({
-        getPath: 'posts',
-        apply: ps => ps.map(p => p.id),
-        setPath: 'schema.properties.posts.enum'
+        src: 'posts',
+        pipe: ps => ps.map(p => p.id),
+        dst: 'schema.properties.posts.enum'
     }, data, schemas);
 
     // and we can do it multiple times
     let specs = [{
-        getPath: 'posts',
-        apply: ps => ps.map(p => p.id),
-        setPath: 'schema.properties.posts.enum'
+        src: 'posts',
+        pipe: ps => ps.map(p => p.id),
+        dst: 'schema.properties.posts.enum'
     }, {
-        getPath: 'posts',
-        apply: ps => ps.map(p => p.name),
-        setPath: 'schema.properties.posts.enumNames'
+        src: 'posts',
+        pipe: ps => ps.map(p => p.name),
+        dst: 'schema.properties.posts.enumNames'
     }]
 
     specs.forEach(s => hoseFit(s, data, schemas));
 });
 ```
 
-All these specs could easily be stored as text in a database, so the data mappings doesn't have to be hard-coded. The `apply` function can be stored as text, see for example: 
+All these specs could easily be stored as text in a database, so the data mappings doesn't have to be hard-coded. The `pipe` function can be stored as text, see for example: 
 
 ```javascript
 let spec = {
-    getPath: 'posts',
-    setPath: 'schema.properties.posts.enum',
+    src: 'posts',
+    dst: 'schema.properties.posts.enum',
 
     // either one of these formats:
     // array
-    apply: ['ps', 'return ps.map(p => p.id)'],
+    pipe: ['ps', 'return ps.map(p => p.id)'],
     // object
-    apply: { args: 'ps', body: 'return ps.map(p => p.id)' },
+    pipe: { args: 'ps', body: 'return ps.map(p => p.id)' },
     // string
-    apply: 'return arguments[0].map(p => p.id)',
+    pipe: 'return arguments[0].map(p => p.id)',
 };
 ```
 
