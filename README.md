@@ -2,6 +2,11 @@
 
 Tool to copy values from given key/path of an object, into another.
 
+Available as NPM module! (my first one to be published actually <3 )
+https://www.npmjs.com/package/racor
+
+That means it can be added to any NPM project with `npm install racor`
+
 ## This basically....
 
 * Gets a value from given object, at given path
