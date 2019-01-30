@@ -1,6 +1,6 @@
 {
   "name": "racor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "lib/racor.js",
   "scripts": {

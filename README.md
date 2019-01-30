@@ -56,7 +56,7 @@ const schemas = { schema: { ... }, uiSchema: { ... } };
 fetch('/api/posts')
 .then(res => res.json())
 .then(data => {
-    let out = hoseFit({
+    let out = racor({
         src: 'posts',
         pipe: ps => ps.map(p => p.id),
         dst: 'schema.properties.posts.enum'
@@ -64,7 +64,7 @@ fetch('/api/posts')
     Object.assign(schemas, out);
 
     // also we can get it assigned passing the schemas as "output" argument
-    let newSchemas = hoseFit({
+    let newSchemas = racor({
         src: 'posts',
         pipe: ps => ps.map(p => p.id),
         dst: 'schema.properties.posts.enum'
@@ -81,7 +81,7 @@ fetch('/api/posts')
         dst: 'schema.properties.posts.enumNames'
     }]
 
-    specs.forEach(s => hoseFit(s, data, schemas));
+    specs.forEach(s => racor(s, data, schemas));
 });
 ```
 
@@ -108,6 +108,17 @@ This is achieved thanks to the JS functionality where you define a function usin
 > const sum = new Function('a, b', 'return a + b');
 > sum(10, 4);
 14
+```
+
+## Abbreviated usage:
+
+See `test` file for usage details
+
+```javascript
+
+racor.min({'src.path': 'destination.pat'}, data[, base])
+racor.fn(t => t.toUpperCase(), { 'data.some': 'someList', 'data.other':'otherList' }, data[, base])
+racor.pluck('id', { 'data.posts': 'postIds' }, data[, base]);
 ```
 
 ## Related
