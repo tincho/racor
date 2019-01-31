@@ -1,17 +1,34 @@
 'use strict';
 
-const set = require('lodash.set');
+const deepmerge = require('deepmerge');
+
+const path2Array = path => path.split(/[\.\[\]]/g).filter(q => q && q !== '');
 // this is my own whimsical implementation of lodash.get
 const get = (
     haystack, // object to lookup inside
     needle, // path to desired key
     spoon // fallback value if not found
-) => needle
-        .split(/[\.\[\]]/g).filter(q => q && q !== '')
+) => path2Array(needle)
         .reduce(
             (obj, key) => obj && obj[key] || false, 
             haystack
         ) || spoon;
+
+const makeHierarchy = (
+    path, value
+) => path2Array(path)
+        .reduceRight((result, key) => {
+            let id = parseInt(key), val = [];
+            if (isNaN(id)) {
+                id = key;
+                val = {};
+            }
+            val[id] = result;
+            return val;
+        }, value);
+
+// this is my own whimsical mini-implementation of lodash.set
+const set = (obj, path, value) => deepmerge(obj, makeHierarchy(path, value));
 
 const isArray = a => Array.prototype.isPrototypeOf(a);
 const identity = i => i;
@@ -66,7 +83,7 @@ function racor(spec, input, base = {}) {
         } = spec,
         original = get(input, src, fallback),
         value  = ensureFn(pipe)(original);
-    return set({...base}, dst, value);
+    return set(base, dst, value);
 };
 
 //// abbreviated shortcuts

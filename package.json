@@ -4,8 +4,8 @@
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "lib/racor.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/tincho/racor.git"
+    "type": "git",
+    "url": "https://github.com/tincho/racor.git"
   },
   "scripts": {
     "test": "mocha",
@@ -15,7 +15,7 @@
   "author": "tin <tin@nuku.com.ar>",
   "license": "MIT",
   "dependencies": {
-    "lodash.set": "^4.3.2"
+    "deepmerge": "^3.1.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
