@@ -1,6 +1,6 @@
 {
   "name": "racor",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "lib/racor.js",
   "repository": {
@@ -9,7 +9,10 @@
   },
   "scripts": {
     "test": "mocha",
-    "compile": "babel -d lib src",
+    "build:transpile": "babel -d lib src",
+    "build:bundle": "rollup -c -n racor --compact --environment INCLUDE_DEPS",
+    "build:min": "uglifyjs dist/bundle.js > dist/bundle.min.js",
+    "compile": "npm run build:transpile && npm run build:bundle && npm run build:min",
     "prepublish": "npm run compile"
   },
   "author": "tin <tin@nuku.com.ar>",
@@ -23,6 +26,9 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-minify": "^0.5.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "uglify-js": "^3.4.9"
   }
 }
