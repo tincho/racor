@@ -10,7 +10,7 @@ const get = (
     spoon // fallback value if not found
 ) => path2Array(needle)
         .reduce(
-            (obj, key) => obj && obj[key] || false, 
+            (obj, key) => obj && obj[key] || false,
             haystack
         ) || spoon;
 
@@ -26,11 +26,15 @@ const makeHierarchy = (
             val[id] = result;
             return val;
         }, value);
-
 // this is my own whimsical mini-implementation of lodash.set
-const set = (obj, path, value) => deepmerge(obj, makeHierarchy(path, value));
+const set = (obj, path, value) => {
+    const arrayMerge = (target, source) => {
+        source.forEach((v, i) => { if (typeof v !== 'undefined') target[i] = v; });
+        return target;
+    };
+    return deepmerge(obj, makeHierarchy(path, value), { arrayMerge })
+};
 
-const isArray = a => Array.prototype.isPrototypeOf(a);
 const identity = i => i;
 const plucker = prop => list => list.map(item => item[prop]);
 /**
@@ -72,7 +76,7 @@ const ensureFn = fn => {
  * @param {*} base object to merge result into, if provided
  */
 function racor(spec, input, base = {}) {
-    if (isArray(spec)) {
+    if (Array.isArray(spec)) {
         return spec.reduce((_base, sp) => racor(sp, input, _base), base);
     }
     let {
@@ -82,7 +86,7 @@ function racor(spec, input, base = {}) {
             fallback // if no value found a default may be provided (will pass thru pipe anyway)
         } = spec,
         original = get(input, src, fallback),
-        value  = ensureFn(pipe)(original);
+        value = ensureFn(pipe)(original);
     return set(base, dst, value);
 };
 
@@ -108,5 +112,4 @@ racor.min = (spec, ...args) => racor(expandSpecs(null, spec), ...args);
  */
 racor.pluck = (prop, ...args) => racor.fn(plucker(prop), ...args);
 
-module.exports = racor;
-// export default racor;
+export default racor;

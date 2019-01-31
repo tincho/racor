@@ -32,9 +32,12 @@ Now available as [npm package](https://www.npmjs.com/package/racor), so it's an 
 
 `git clone ... && cd ... `
 `npm install`
-`npm run compile`
+`npm run build`
 
-Thanks to Babel, Rollup and Uglify, this will generate in `dist/` files `bundle.js` (~4kB) and `bundle.min.js` (~2.5kB) ready to be used in any environment, NodeJS or the browser.
+Thanks to Rollup (with Babel, Node Resolver, CommonJS and Uglify plugins), this will generate files
+
+* `dist/bundle.min.js` for usage in the browser. The bundle includes `deepmerge`.
+* `lib/racor.js` converted to ES5 to use with `require()` from Node (and maybe browser too, IDK)
 
 ## Test
 

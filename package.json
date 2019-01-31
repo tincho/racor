@@ -1,19 +1,17 @@
 {
   "name": "racor",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Hose-Fitting utility for hydrating objects from objects linked with key paths",
   "main": "lib/racor.js",
+  "browser": "dist/bundle.min.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/tincho/racor.git"
   },
   "scripts": {
     "test": "mocha",
-    "build:transpile": "babel -d lib src",
-    "build:bundle": "rollup -c -n racor --compact --environment INCLUDE_DEPS",
-    "build:min": "uglifyjs dist/bundle.js > dist/bundle.min.js",
-    "compile": "npm run build:transpile && npm run build:bundle && npm run build:min",
-    "prepublish": "npm run compile"
+    "build": "rollup -c -n racor --compact --environment INCLUDE_DEPS",
+    "prepublish": "npm run build"
   },
   "author": "tin <tin@nuku.com.ar>",
   "license": "MIT",
@@ -21,14 +19,13 @@
     "deepmerge": "^3.1.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-minify": "^0.5.0",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
     "mocha": "^5.2.0",
     "rollup": "^1.1.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "uglify-js": "^3.4.9"
+    "rollup-plugin-uglify": "^6.0.2"
   }
 }

@@ -1,10 +1,7 @@
 const assert = require('assert');
 const racor = require('../lib/racor');
-// bundle
-//const racor = require('../dist/bundle.js');
-// minify
-// const racor = require('../dist/bundle.min.js');
-
+// browser
+// require('../dist/bundle.min.js');
 
 describe('racor', () => {
 

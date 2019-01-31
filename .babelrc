@@ -1,4 +1,10 @@
 {
-  "presets": ["es2015","minify"],
-  "plugins": ["transform-es2015-destructuring", "transform-object-rest-spread"]
+  "presets": [
+    ["@babel/preset-env", {
+      "targets": {
+        "browsers": ["last 2 versions", "safari >= 7"]
+      },
+	  "modules": false
+    }]
+  ]
 }
