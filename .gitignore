@@ -1,4 +1,7 @@
 lib/*
+dist/*
+!lib/.empty
+!dist/.empty
 .cache
 *~
 node_modules
