@@ -1,11 +1,9 @@
 const assert = require('assert');
-const racor = require('../src/racor');
-// to test after transpile
-//const racor = require('../lib/racor');
+const racor = require('../lib/racor');
 // bundle
 //const racor = require('../dist/bundle.js');
 // minify
-//const racor = require('../dist/bundle.min.js');
+// const racor = require('../dist/bundle.min.js');
 
 
 describe('racor', () => {

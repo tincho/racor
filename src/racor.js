@@ -1,6 +1,6 @@
 'use strict';
 
-const deepmerge = require('deepmerge');
+import deepmerge from 'deepmerge';
 
 const path2Array = path => path.split(/[\.\[\]]/g).filter(q => q && q !== '');
 // this is my own whimsical implementation of lodash.get
