@@ -2,8 +2,6 @@
 
 Tool to copy values from given key/path of an object, into another.
 
-
-
 ## This basically....
 
 Is a dead-simple JavaScript hand-changing utility for data, mostly JSON.
@@ -26,7 +24,9 @@ Since version 1.1.0 the only dependency is [deepmerge](https://www.npmjs.com/pac
 
 ## Installation
 
-Now available as [npm package](https
+Now available as [npm package](https://www.npmjs.com/package/racor), so it's an `npm install racor` away! 
+
+*(this is actually my first NPM module to be published)*
 
 ### Or build it from source:
 
