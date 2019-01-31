@@ -5,7 +5,7 @@ export default {
   input: 'lib/racor.js',
   output: {
     file: 'dist/bundle.js',
-    format: 'umd'
+    format: 'cjs'
   },
   plugins: [resolve()]
 };
